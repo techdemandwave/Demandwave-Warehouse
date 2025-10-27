@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(),
     );
   }
 }
@@ -26,6 +27,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  String result = '';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +45,23 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: () async {
+          String? res = await SimpleBarcodeScanner.scanBarcode(
+            context,
+            barcodeAppBar: const BarcodeAppBar(
+              appBarTitle: 'Test',
+              centerTitle: false,
+              enableBackButton: true,
+              backButtonIcon: Icon(Icons.arrow_back_ios),
+            ),
+            isShowFlashIcon: true,
+            delayMillis: 2000,
+            cameraFace: CameraFace.front,
+          );
+          setState(() {
+            result = res as String;
+          });
+        },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
